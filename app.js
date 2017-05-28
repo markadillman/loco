@@ -414,29 +414,29 @@ var pullHelper = function(req,res,setname,initCoords){
 //multiple routes using helper function.
 app.post('/pulltop',function(req,res){
 	var initCoords = {};
-	initCoords.x - req.body.x;
-	initCoords.y - req.body.y;
+	initCoords.x = req.body.x;
+	initCoords.y = req.body.y;
 	pullHelper(req,res,'top pull',initCoords);
 });
 
 app.post('/pullbottom',function(req,res){
 	var initCoords = {};
-	initCoords.x - req.body.x;
-	initCoords.y - req.body.y;
+	initCoords.x = req.body.x;
+	initCoords.y = req.body.y;
 	pullHelper(req,res,'bottom pull',initCoords);
 });
 
 app.post('/pullleft',function(req,res){
 	var initCoords = {};
-	initCoords.x - req.body.x;
-	initCoords.y - req.body.y;
+	initCoords.x = req.body.x;
+	initCoords.y = req.body.y;
 	pullHelper(req,res,'left pull',initCoords);
 });
 
 app.post('/pullright',function(req,res){
 	var initCoords = {};
-	initCoords.x - req.body.x;
-	initCoords.y - req.body.y;
+	initCoords.x = req.body.x;
+	initCoords.y = req.body.y;
 	pullHelper(req,res,'right pull',initCoords);
 });
 
