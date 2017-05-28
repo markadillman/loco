@@ -71,10 +71,10 @@ const initPullPairs = { "-2,-2":{"x":-2,"y":-2},
 						"2,2":{"x":2,"y":2},
 				};
 				//these are used for movement-triggered pulls to maintain a memory buffer in the client
-const pullSets = {	"top pull" : {{-2,-3},{-1,-3},{0,-3},{1,-3},{2,-3}},
-					"bottom pull" : {{-2,3},{-1,3},{0,3},{1,3},{2,3}},
-					"left pull" : {{-3,-2},{-3,-1},{-3,0},{-3,1},{-3,2}},
-					"right pull" : {{3,-2},{3,-1},{3,0},{3,1},{3,2}}
+const pullSets = {	"top pull" : {0:{-2,-3},1:{-1,-3},2:{0,-3},3:{1,-3},4:{2,-3}},
+					"bottom pull" : {0:{-2,3},1:{-1,3},2:{0,3},3:{1,3},4:{2,3}},
+					"left pull" : {0:{-3,-2},1:{-3,-1},2:{-3,0},3:{-3,1},4:{-3,2}},
+					"right pull" : {0:{3,-2},1:{3,-1},2:{3,0},3:{3,1},4:{3,2}}
 				};
 
 //HELPER FUNCTION FOR SVG VALIDITY

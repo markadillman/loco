@@ -359,7 +359,9 @@ Game =
 
 		//request responsetext will be in the format of assets
 		function dynamicPostOnLoad(req){
-			cconsole.log("response:");
+			console.log("response:");
+			var body = JSON.parse(request.responseText);
+			console.log(body);
 		}
 
 		// Start game on home screen
