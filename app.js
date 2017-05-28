@@ -413,7 +413,7 @@ var pullHelper = function(req,res,setname,initCoords){
 
 //multiple routes using helper function.
 app.post('/pulltop',function(req,res){
-	console.log(req);
+	console.log(req.body);
 	var initCoords = {};
 	initCoords.x = req.body.x;
 	initCoords.y = req.body.y;
@@ -421,7 +421,7 @@ app.post('/pulltop',function(req,res){
 });
 
 app.post('/pullbottom',function(req,res){
-	console.log(req);
+	console.log(req.body);
 	var initCoords = {};
 	initCoords.x = req.body.x;
 	initCoords.y = req.body.y;
@@ -429,7 +429,7 @@ app.post('/pullbottom',function(req,res){
 });
 
 app.post('/pullleft',function(req,res){
-	console.log(req);
+	console.log(req.body);
 	var initCoords = {};
 	initCoords.x = req.body.x;
 	initCoords.y = req.body.y;
@@ -437,7 +437,7 @@ app.post('/pullleft',function(req,res){
 });
 
 app.post('/pullright',function(req,res){
-	console.log(req);
+	console.log(req.body);
 	var initCoords = {};
 	initCoords.x = req.body.x;
 	initCoords.y = req.body.y;
