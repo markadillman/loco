@@ -236,7 +236,8 @@ Game =
 					if (mode == gameMode) { // only read these if in gameplay mode
 						if (e.key == Crafty.keys.E) {
 							//console.log("Go go gadget edit mode!");
-							doTileEdit(); // function in tool.js
+							doTileEdit(Math.floor(currentUpperLeftX / tileWidth),
+									   Math.floor(currentUpperLeftY / tileHeight)); // function in tool.js
 						}
 						if (e.key == Crafty.keys.M) {
 							// ### switch to map mode
