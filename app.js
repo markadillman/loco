@@ -409,11 +409,11 @@ var pullHelper = function(req,res,setname,initCoords){
 		console.log(initCoords.x);
 		console.log("initY");
 		console.log(initCoords.y);
-		console.log(Number.parseInt(initCoords.x) + pullSets[setname][coords]['x']);
-		console.log(Number.parseInt(initCoords.y) + pullSetts[setname][coords]['y']);
+		console.log(Number.parseInt(initCoords.x) + pullSets[setname][i]['x']);
+		console.log(Number.parseInt(initCoords.y) + pullSets[setname][i]['y']);
 		var tempCoords = {};
-		tempCoords['xcoord'] = initCoords.x + pullSets[setname][coords]['x'];
-		tempCoords['ycoord'] = initCoords.y + pullSetts[setname][coords]['y'];
+		tempCoords['xcoord'] = initCoords.x + pullSets[setname][i]['x'];
+		tempCoords['ycoord'] = initCoords.y + pullSetts[setname][i]['y'];
 		console.log("temp coords");
 		console.log(util.inspect(tempCoords));
 		variableArray.push(tempCoords);
