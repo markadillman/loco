@@ -741,6 +741,7 @@ function panDownButton() {
 function doTileEdit(currentX,currentY) {
 	// ### make sure xTile and yTile are set correctly
 	if (currentX && currentY){
+		console.log("changing tile editing.");
 		xTile = currentX;
 		yTile = currentY;
 	}
