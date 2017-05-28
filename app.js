@@ -403,6 +403,12 @@ var pullHelper = function(req,res,setname,initCoords){
 		console.log(pullSets[setname][i]['x']);
 		console.log("y");
 		console.log(pullSets[setname][i]['y']);
+		console.log("initCoords");
+		console.log(util.inspect(initCoords));
+		console.log("initX");
+		console.log(initCoords.x);
+		console.log("initY");
+		console.log(initCoords.y);
 		var tempCoords = {};
 		tempCoords['xcoord'] = initCoords.x + Number.parseInt(pullSets[setname][coords]['x']);
 		tempCoords['ycoord'] = initCoords.y + Number.parseInt(pullSetts[setname][coords]['y']);
