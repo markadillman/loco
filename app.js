@@ -385,7 +385,8 @@ var dynamicPullCallback = function(db,req,res,docs,initCoords,setname){
 	res.setHeader('Content-Type','application/json');
 	res.status(200);
 	console.log("res status:");
-	console.log(JSON.stringify(res._headers))
+	console.log(JSON.stringify(res._headers));
+	console.log(JSON.stringify(responseObject));
 	res.status(200).send(JSON.stringify(responseObject));
 };
 
