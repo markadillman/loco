@@ -396,11 +396,13 @@ var pullHelper = function(req,res,setname,initCoords){
 	console.log();
 	var query = {};
 	var variableArray = new Array();
-	for (coords in pullSets[setname]){
+	for (var i = 0 ; i < 5 ; i = i+1){
+		console.log("i");
+		console.log(i);
 		console.log("x");
-		console.log(pullSets[setname][coords]['x']);
+		console.log(pullSets[setname][i]['x']);
 		console.log("y");
-		console.log(pullSets[setname][coords]['y']);
+		console.log(pullSets[setname][i]['y']);
 		var tempCoords = {};
 		tempCoords['xcoord'] = initCoords.x + pullSets[setname][coords]['x'];
 		tempCoords['ycoord'] = initCoords.y + pullSetts[setname][coords]['y'];
