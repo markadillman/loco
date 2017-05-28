@@ -369,7 +369,7 @@ var dynamicPullCallback = function(db,req,res,docs,initCoords,setname){
 		console.log("tile");
 		console.log(tile);
 		console.log("init coords");
-		console.log(util.inspect(pullSets[setname]);
+		console.log(util.inspect(pullSets[setname]));
 		//inner loop iterates over returned matches that have been edited and are owned
 		for (doc in docs){
 			//if there are custom art assets at a given tile, add that document to the response body
