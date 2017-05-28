@@ -391,6 +391,9 @@ var dynamicPullCallback = function(db,req,res,docs,initCoords,setname){
 
 //helper function that takes a type of pull and init coords as arguments; then pulls the correct set
 var pullHelper = function(req,res,setname,initCoords){
+	console.log("target set:");
+	console.log(util.inspect(pullSets[setname]));
+	console.log();
 	var query = {};
 	var variableArray = new Array();
 	for (coords in pullSets[setname]){
