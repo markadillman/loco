@@ -263,13 +263,14 @@ Game =
 	      				//get current tile coordinates to orient pull
 	      				var tileX = Math.floor(currentUpperLeftX / tileWidth);
 	      				var tileY = Math.floor(currentUpperLeftY / tileHeight);
+	      				var payload = {'x' : tileX, 'y': tileY};
 	      				if (this.x > currentUpperLeftX + tileWidth)
 	      				{
 	      					currentUpperLeftX = currentUpperLeftX + tileWidth;
 	      					Crafty.viewport.pan(tileWidth, 0, panTime);
 
 	      					// Load assets in outer rightmost "ring" segment
-	      					dynamicPostRequest('/pullright',{tileX,tileY},dynamicPostOnLoad,dynamicError);
+	      					dynamicPostRequest('/pullright',payload,dynamicPostOnLoad,dynamicError);
 	      					// Destroy assets in outer leftmost "ring" segment
 	      				}
 	      				else if (this.x < currentUpperLeftX)
@@ -278,7 +279,7 @@ Game =
       						Crafty.viewport.pan(tileWidth * -1, 0, panTime);
 
       						// Load assets in outer leftmost "ring" segment
-      						dynamicPostRequest('/pullleft',{tileX,tileY},dynamicPostOnLoad,dynamicError);
+      						dynamicPostRequest('/pullleft',payload,dynamicPostOnLoad,dynamicError);
       						// Destroy assets in outer rightmost "ring" segment
 	      				}
 
@@ -288,7 +289,7 @@ Game =
 	      					Crafty.viewport.pan(0, tileHeight, panTime);
 
 	      					// Load assets in outer bottom-most "ring" segment
-	      					dynamicPostRequest('/pullbottom',{tileX,tileY},dynamicPostOnLoad,dynamicError);
+	      					dynamicPostRequest('/pullbottom',payload,dynamicPostOnLoad,dynamicError);
 	      					// Destroy assets in outer top-most "ring" segment
 	      				}
 	      				else if (this.y < currentUpperLeftY)
@@ -297,7 +298,7 @@ Game =
 	      					Crafty.viewport.pan(0, tileHeight * -1, panTime);
 
 	      					// Load assets in outer top-most "ring" segment
-	      					dynamicPostRequest('/pulltop',{tileX,tileY},dynamicPostOnLoad,dynamicError);
+	      					dynamicPostRequest('/pulltop',payload,dynamicPostOnLoad,dynamicError);
 	      					// Destroy assets in outer bottom-most "ring" segment
 	      				}
 	      			});
@@ -337,6 +338,8 @@ Game =
 		    the data structure key as an arg to the callback ("top pull", etc.)
 		*/
 		function dynamicPostRequest(url,payload,onload,error){
+			console.log("Dynamic psot payload:");
+			console.log(payload);
 			var request = new XMLHttpRequest();
 			request.open("POST",url,true);
 			request.setRequestHeader('Content-Type','application/json; charset=UTF-8');
