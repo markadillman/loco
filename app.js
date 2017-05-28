@@ -43,6 +43,39 @@ const coordinatePairs = {"ul": {"x":-1,"y":-1,"canvasId":"aboveLeftDivCanvas"},/
 					     "bm": {"x":0,"y":1,"canvasId":"belowDivCanvas"},      //------bottom middle ("bm")
 					     "br": {"x":1,"y":1,"canvasId":"belowRightDivCanvas"}  //------bottom right ("br")
 					};
+					//all coordinates below are actually adjustment factors and not hard coded coords
+const initPullPairs = { "-2,-2":{"x":-2,"y":-2},
+						"-2,-1":{"x":-2,"y":-1},
+						"-2,0":{"x":-2,"y":0},
+						"-2,1":{"x":-2,"y":1},
+						"-2,2":{"x":-2,"y":2},
+						"-1,-2":{"x":-1,"y":-2},
+						"-1,-1":{"x":-1,"y":-1},
+						"-1,0":{"x":-1,"y":0},
+						"-1,1":{"x":-1,"y":1},
+						"-1,2":{"x":-1,"y":2},
+						"0,-2":{"x":0,"y":-2},
+						"0,-1":{"x":0,"y":-1},
+						"0,0":{"x":0,"y":0},
+						"0,1":{"x":0,"y":1},
+						"0,2":{"x":0,"y":2},
+						"1,-2":{"x":1,"y":-2},
+						"1,-1":{"x":1,"y":-1},
+						"1,0":{"x":1,"y":0},
+						"1,1":{"x":1,"y":1},
+						"1,2":{"x":1,"y":2},
+						"2,-2":{"x":2,"y":-2},
+						"2,-1":{"x":2,"y":-1},
+						"2,0":{"x":2,"y":0},
+						"2,1":{"x":2,"y":1},
+						"2,2":{"x":2,"y":2},
+				};
+				//these are used for movement-triggered pulls to maintain a memory buffer in the client
+const pullSets = {	"top pull" : {{-2,-3},{-1,-3},{0,-3},{1,-3},{2,-3}},
+					"bottom pull" : {{-2,3},{-1,3},{0,3},{1,3},{2,3}},
+					"left pull" : {{-3,-2},{-3,-1},{-3,0},{-3,1},{-3,2}},
+					"right pull" : {{3,-2},{3,-1},{3,0},{3,1},{3,2}}
+				};
 
 //HELPER FUNCTION FOR SVG VALIDITY
 function isValidSvg(svgString){
@@ -130,7 +163,7 @@ var insertCallback = function(db,res){
 	res.sendStatus(200);
 }
 
-var findDocument = function(db,query,req,res,callback,initCoords){
+var findDocument = function(db,query,req,res,callback,initCoords,setname){
 	var collection = db.collection('tiles');
 	console.log(util.inspect(query));
 	collection.find(query).toArray(function(err,docs){
@@ -140,7 +173,10 @@ var findDocument = function(db,query,req,res,callback,initCoords){
 		//console.log(docs);
 		//console.log("Size of docs:");
 		//console.log(docs.length);
-		if (initCoords){
+		if (initCoords && setname){
+			callback(db,req,res,docs,initCoords,setname);
+		}
+		else if (initCoords){
 			callback(db,req,res,docs,initCoords);
 		} else {
 			callback(db,req,res,docs);
@@ -247,7 +283,7 @@ app.post('/readpull',function(req,res){
 	console.log(util.inspect(variableArray));
 	query['$or'] = variableArray;
 	console.log(util.inspect(query));
-		MongoClient.connect(dbUrl,function(err,db){
+	MongoClient.connect(dbUrl,function(err,db){
 		//test for errors, pop out if there are errors present
 		assert.equal(null,err);
 		console.log("connected succesfully to server");
@@ -255,6 +291,153 @@ app.post('/readpull',function(req,res){
 		findDocument(db,query,req,res,readSurroundingsCallback,initCoords);
 	});
 	return;
+});
+
+//callback function for the initial pull of 25 tile assets
+var initPullCallback = function(db,req,res,docs,initCoords){
+	//initialize response object
+	var responseObject = {};
+	console.log("init coords");
+	console.log(initCoords);
+	//outer loop iterates over required response fields returned and matches that have been edited and are owned
+	for (tile in initPullPairs){
+		console.log("tile");
+		console.log(tile);
+		console.log("init coords");
+		console.log(initPullPairs);
+		//inner loop iterates over returned matches that have been edited and are owned
+		for (doc in docs){
+			//if there are custom art assets at a given tile, add that document to the response body
+			if ((docs[doc]['xcoord'] - initCoords.x == initPullPairs[tile]['x']) &&
+				 docs[doc]['ycoord'] - initCoords.y == initPullPairs[tile]['y'])
+			{
+				responseObject[tile] = docs[doc];
+				console.log("match found");
+			}
+		}
+	}
+	//send response
+	res.setHeader('Content-Type','application/json');
+	res.status(200);
+	console.log("res status:");
+	console.log(JSON.stringify(res._headers))
+	res.status(200).send(JSON.stringify(responseObject));
+}
+
+/*this pulls a block of 25 tiles surrounding the current tile. Used for origin pull
+  at start of game, or when a user enacts teleportation. The data packet is simpy the
+  tile cooridnate of the central tile in the 25 tile array.*/
+app.post('/initpull',function(req,res){
+	//log request body for debug
+	console.log(util.inspect(req.body));
+	//constuct query argument
+	var query = {};
+	var variableArray = new Array();
+	var initCoords = {};
+	initCoords.x = req.body.x;
+	initCoords.y = req.body.y;
+	for (key in initPullPairs){
+		var tempCoords = {};
+		//apply adjustment factor for every tile in the 25 tile buffer, then add to query
+		tempCoords['xcoord'] = initCoords.x + initPullPairs[key]['x'];
+		tempCoords['ycoord'] = initCoords.y + initPullPairs[key]['y'];
+		variableArray.push(tempCoords);
+	}
+	console.log(util.inspect(variableArray));
+	query['$or'] = variableArray;
+	console.log(util.inspect(query));
+	MongoClient.connect(dbUrl,function(err,db){
+		//test for errors, pop out if there are errors present
+		assert.equal(null,err);
+		console.log("connected succesfully to server");
+		//perform lookup
+		findDocument(db,query,req,res,initPullCallback,initCoords);
+	});
+	return;
+});
+
+
+
+//callback function that populates the adjusted coordinates
+var dynamicPullCallback = function(db,req,res,docs,initCoords,setname){
+	//initialize response object
+	var responseObject = {};
+	console.log("init coords");
+	console.log(initCoords);
+	//outer loop iterates over required response fields returned and matches that have been edited and are owned
+	for (tile in pullSets[setname]){
+		console.log("tile");
+		console.log(tile);
+		console.log("init coords");
+		console.log(util.inspect(pullSets[setname]);
+		//inner loop iterates over returned matches that have been edited and are owned
+		for (doc in docs){
+			//if there are custom art assets at a given tile, add that document to the response body
+			if ((docs[doc]['xcoord'] - initCoords.x == initPullPairs[tile]['x']) &&
+				 docs[doc]['ycoord'] - initCoords.y == initPullPairs[tile]['y'])
+			{
+				responseObject[tile] = docs[doc];
+				console.log("match found");
+			}
+		}
+	}
+	//send response
+	res.setHeader('Content-Type','application/json');
+	res.status(200);
+	console.log("res status:");
+	console.log(JSON.stringify(res._headers))
+	res.status(200).send(JSON.stringify(responseObject));
+};
+
+//helper function that takes a type of pull and init coords as arguments; then pulls the correct set
+var pullHelper = function(req,res,setname,initCoords){
+	var query = {};
+	var variableArray = new Array();
+	for (coords in pullSets[setname]){
+		var tempCoords = {};
+		tempCoords['xcoord'] = initCoords.x + pullSets[setname][coords][0];
+		tempCoords['ycoord'] = initCoords.y + pullSetts[setname][coords][1];
+		variableArray.push(tempCoords);
+	}
+	console.log(util.inspect(variableArray));
+	query['$or'] = variableArray;
+	console.log(util.inspect(query));
+	MongoClient.connect(dbUrl,function(err,db){
+		//test for errors, pop out if there are errors present
+		assert.equal(null,err);
+		console.log("connected succesfully to server");
+		//perform lookup
+		findDocument(db,query,req,res,dynamicPullCallback,initCoords,setname);
+	});
+};
+
+//multiple routes using helper function.
+app.post('/pulltop',function(req,res){
+	var initCoords = {};
+	initCoords.x - req.body.x;
+	initCoords.y - req.body.y;
+	pullHelper(req,res,'top pull',initCoords);
+});
+
+app.post('/pullbottom',function(req,res){
+	var initCoords = {};
+	initCoords.x - req.body.x;
+	initCoords.y - req.body.y;
+	pullHelper(req,res,'bottom pull',initCoords);
+});
+
+app.post('/pullleft',function(req,res){
+	var initCoords = {};
+	initCoords.x - req.body.x;
+	initCoords.y - req.body.y;
+	pullHelper(req,res,'left pull',initCoords);
+});
+
+app.post('/pullright',function(req,res){
+	var initCoords = {};
+	initCoords.x - req.body.x;
+	initCoords.y - req.body.y;
+	pullHelper(req,res,'right pull',initCoords);
 });
 
 // catch 404 and forward to error handler

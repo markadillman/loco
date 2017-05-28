@@ -1147,7 +1147,6 @@ function postRequest(url,payload,onload,error){
 		error(request);
 	};
 	request.send(JSON.stringify(payload));
-
 }
 //KEEP: HELPER FUNCTION: request error helper
 function postOnError(request){

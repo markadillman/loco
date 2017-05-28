@@ -260,12 +260,16 @@ Game =
 	      		// Move camera when player leaves current tile
 	      		.bind('Moved', function()
 	      			{
+	      				//get current tile coordinates to orient pull
+	      				var tileX = Math.floor(currentUpperLeftX / tileWidth);
+	      				var tileY = Math.floor(currentUpperLeftY / tileHeight);
 	      				if (this.x > currentUpperLeftX + tileWidth)
 	      				{
 	      					currentUpperLeftX = currentUpperLeftX + tileWidth;
 	      					Crafty.viewport.pan(tileWidth, 0, panTime);
 
 	      					// Load assets in outer rightmost "ring" segment
+	      					dynamicPostRequest('/pullright',{tileX,tileY},dynamicPostOnLoad,dynamicError);
 	      					// Destroy assets in outer leftmost "ring" segment
 	      				}
 	      				else if (this.x < currentUpperLeftX)
@@ -274,6 +278,7 @@ Game =
       						Crafty.viewport.pan(tileWidth * -1, 0, panTime);
 
       						// Load assets in outer leftmost "ring" segment
+      						dynamicPostRequest('/pullleft',{tileX,tileY},dynamicPostOnLoad,dynamicError);
       						// Destroy assets in outer rightmost "ring" segment
 	      				}
 
@@ -283,6 +288,7 @@ Game =
 	      					Crafty.viewport.pan(0, tileHeight, panTime);
 
 	      					// Load assets in outer bottom-most "ring" segment
+	      					dynamicPostRequest('/pullbottom',{tileX,tileY},dynamicPostOnLoad,dynamicError);
 	      					// Destroy assets in outer top-most "ring" segment
 	      				}
 	      				else if (this.y < currentUpperLeftY)
@@ -291,6 +297,7 @@ Game =
 	      					Crafty.viewport.pan(0, tileHeight * -1, panTime);
 
 	      					// Load assets in outer top-most "ring" segment
+	      					dynamicPostRequest('/pulltop',{tileX,tileY},dynamicPostOnLoad,dynamicError);
 	      					// Destroy assets in outer bottom-most "ring" segment
 	      				}
 	      			});
@@ -320,6 +327,40 @@ Game =
 			playing = false;
 			// end Toni's code
 		});
+
+		/*start Mark's code, helper functions to fetch rows of 5 assets:
+			"top pull" : {{-2,-3},{-1,-3},{0,-3},{1,-3},{2,-3}}, URL: /pulltop
+			"bottom pull" : {{-2,3},{-1,3},{0,3},{1,3},{2,3}},   URL: /pullbottom
+			"left pull" : {{-3,-2},{-3,-1},{-3,0},{-3,1},{-3,2}},URL: /pullleft
+			"right pull" : {{3,-2},{3,-1},{3,0},{3,1},{3,2}}     URL: /pullright
+			onload will render the environment into the correct coordinates. Must pass
+		    the data structure key as an arg to the callback ("top pull", etc.)
+		*/
+		function dynamicPostRequest(url,payload,onload,error){
+			var request = new XMLHttpRequest();
+			request.open("POST",url,true);
+			request.setRequestHeader('Content-Type','application/json; charset=UTF-8');
+			//request.responseType = "json";
+			request.onload = function(){
+				if (request.readyState === 4){
+					if (request.status === 200 || request.status === 242) {
+						onload(request);
+					} else {
+						console.error(request.statusText);
+						error(request);
+					}
+				}
+			};
+			request.onerror = function(){
+				error(request);
+			};
+			request.send(JSON.stringify(payload));
+		}
+
+		//request responsetext will be in the format of assets
+		function dynamicPostOnLoad(req){
+			cconsole.log("response:");
+		}
 
 		// Start game on home screen
 		Crafty.enterScene('HomeScreen');
