@@ -396,7 +396,7 @@ var pullHelper = function(req,res,setname,initCoords){
 	console.log();
 	var query = {};
 	var variableArray = new Array();
-	for (var i = 0 ; i < 5 ; i = i+1){
+	for (var i = 0 ; i < 5 ; i += 1){
 		console.log("i");
 		console.log(i);
 		console.log("x");
@@ -413,7 +413,7 @@ var pullHelper = function(req,res,setname,initCoords){
 		console.log(Number.parseInt(initCoords.y) + pullSets[setname][i]['y']);
 		var tempCoords = {};
 		tempCoords['xcoord'] = Number.parseInt(initCoords.x) + pullSets[setname][i]['x'];
-		tempCoords['ycoord'] = Number.parseInt(initCoords.y) + pullSetts[setname][i]['y'];
+		tempCoords['ycoord'] = Number.parseInt(initCoords.y) + pullSets[setname][i]['y'];
 		console.log("temp coords");
 		console.log(util.inspect(tempCoords));
 		variableArray.push(tempCoords);
