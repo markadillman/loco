@@ -412,8 +412,8 @@ var pullHelper = function(req,res,setname,initCoords){
 		console.log(Number.parseInt(initCoords.x) + pullSets[setname][i]['x']);
 		console.log(Number.parseInt(initCoords.y) + pullSets[setname][i]['y']);
 		var tempCoords = {};
-		tempCoords['xcoord'] = initCoords.x + pullSets[setname][i]['x'];
-		tempCoords['ycoord'] = initCoords.y + pullSetts[setname][i]['y'];
+		tempCoords['xcoord'] = Number.parseInt(initCoords.x) + pullSets[setname][i]['x'];
+		tempCoords['ycoord'] = Number.parseInt(initCoords.y) + pullSetts[setname][i]['y'];
 		console.log("temp coords");
 		console.log(util.inspect(tempCoords));
 		variableArray.push(tempCoords);
