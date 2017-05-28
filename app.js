@@ -360,34 +360,15 @@ app.post('/initpull',function(req,res){
 
 //callback function that populates the adjusted coordinates
 var dynamicPullCallback = function(db,req,res,docs,initCoords,setname){
-	//initialize response object
-	var responseObject = {};
 	console.log("init coords");
 	console.log(initCoords);
-	//outer loop iterates over required response fields returned and matches that have been edited and are owned
-	for (tile in pullSets[setname]){
-		console.log("tile");
-		console.log(tile);
-		console.log("init coords");
-		console.log(util.inspect(pullSets[setname]));
-		//inner loop iterates over returned matches that have been edited and are owned
-		for (doc in docs){
-			//if there are custom art assets at a given tile, add that document to the response body
-			if ((docs[doc]['xcoord'] - initCoords.x == initPullPairs[tile]['x']) &&
-				 docs[doc]['ycoord'] - initCoords.y == initPullPairs[tile]['y'])
-			{
-				responseObject[tile] = docs[doc];
-				console.log("match found");
-			}
-		}
-	}
 	//send response
 	res.setHeader('Content-Type','application/json');
 	res.status(200);
 	console.log("res status:");
 	console.log(JSON.stringify(res._headers));
-	console.log(JSON.stringify(responseObject));
-	res.status(200).send(JSON.stringify(responseObject));
+	console.log(JSON.stringify(docs));
+	res.status(200).send(JSON.stringify(docs));
 };
 
 //helper function that takes a type of pull and init coords as arguments; then pulls the correct set
