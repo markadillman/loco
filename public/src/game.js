@@ -338,6 +338,7 @@ Game =
 				.bind('Spawned',function(){
 					initAssetRequest(this.x,this.y);
 				});
+			player.z = 1;
 			//pull initial art assets
 			Crafty.trigger('Spawned');
 			// Platforms
