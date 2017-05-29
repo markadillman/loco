@@ -403,7 +403,9 @@ Game =
 		function assetRender(assets){
 			for (asset in assets){
 				//SVG tags added so that it can be a standalone, valid XML file for URL
-				var myGroupString = svgPrefix + asset['svg'] + svgPostfix;
+				console.log("svg");
+				console.log(assets[asset]['svg']);
+				var myGroupString = svgPrefix + assets[asset]['svg'] + svgPostfix;
 				console.log("svg string in text");
 				console.log(myGroupString);
 				//generate a URL for this svg grouping
