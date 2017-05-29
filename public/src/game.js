@@ -424,7 +424,7 @@ Game =
 			body.y = playerTileY;
 			console.log("Init request center tile:");
 			console.log(body);
-			dynamicPostRequest(url,body,initAssetRender,dynamicError);
+			dynamicPostRequest('/initpull',body,initAssetRender,dynamicError);
 		}
 
 		function initAssetRender(){
