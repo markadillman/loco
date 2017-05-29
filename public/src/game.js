@@ -333,7 +333,8 @@ Game =
 	      					// Destroy assets in outer bottom-most "ring" segment
 	      				}
 	      			});
-
+			//pull initial art assets
+			initAssetRequest();
 			// Platforms
 			Crafty.e('Platform, 2D, Canvas, Color')
 				.attr({x: 0, y: 250, w: 250, h: 10})
@@ -411,7 +412,7 @@ Game =
 			console.error(request.statusText);
 		}
 
-		function initRequest(){
+		function initAssetRequest(){
 			//update player tile (if teleport, this should be called post teleport coords)
 			var playerTileX = Math.floor(player.x/tileWidth);
 			var playerTileY= Math.floor(player.y/tileHeight);
@@ -420,10 +421,10 @@ Game =
 			body.y = playerTileY;
 			console.log("Init request center tile:");
 			console.log(body);
-			dynamicPostRequest(url,body,initRender,dynamicError);
+			dynamicPostRequest(url,body,initAssetRender,dynamicError);
 		}
 
-		function initRender(){
+		function initAssetRender(){
 			//parse the response body and render it
 			console.log("response:");
 			var body = JSON.parse(request.responseText);
