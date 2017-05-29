@@ -332,9 +332,12 @@ Game =
 	      					dynamicPostRequest('/pulltop',payload,dynamicPostOnLoad,dynamicError);
 	      					// Destroy assets in outer bottom-most "ring" segment
 	      				}
-	      			});
+	      			})
+				.bind('Spawned',function(){
+					initAssetRequest(this.x,this.y);
+				});
 			//pull initial art assets
-			initAssetRequest();
+			Crafty.trigger('Spawned');
 			// Platforms
 			Crafty.e('Platform, 2D, Canvas, Color')
 				.attr({x: 0, y: 250, w: 250, h: 10})
@@ -372,7 +375,7 @@ Game =
 		    the data structure key as an arg to the callback ("top pull", etc.)
 		*/
 		function dynamicPostRequest(url,payload,onload,error){
-			console.log("Dynamic psot payload:");
+			console.log("Dynamic post payload:");
 			console.log(payload);
 			var request = new XMLHttpRequest();
 			request.open("POST",url,true);
@@ -412,10 +415,10 @@ Game =
 			console.error(request.statusText);
 		}
 
-		function initAssetRequest(){
+		function initAssetRequest(playerX,playerY){
 			//update player tile (if teleport, this should be called post teleport coords)
-			var playerTileX = Math.floor(player.x/tileWidth);
-			var playerTileY= Math.floor(player.y/tileHeight);
+			var playerTileX = Math.floor(playerX/tileWidth);
+			var playerTileY= Math.floor(playerY/tileHeight);
 			var body = {};
 			body.x = playerTileX;
 			body.y = playerTileY;

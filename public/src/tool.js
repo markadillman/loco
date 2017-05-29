@@ -92,6 +92,7 @@ var coordinatePairs = {"ul": {"x":-1,"y":-1,"canvasId":"aboveLeftDivCanvas"},//-
 					   "bm": {"x":0,"y":1,"canvasId":"belowDivCanvas"},  //------bottom middle ("bm")
 					   "br": {"x":1,"y":1,"canvasId":"belowRightDivCanvas"}    //------bottom right ("br")
 					};
+
 //end MARK'S CODE
 var myFileInput;		// HTML input element for handling files
 // start Mark's code, slightly modified by Toni to add the white rectangle
