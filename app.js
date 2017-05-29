@@ -295,33 +295,12 @@ app.post('/readpull',function(req,res){
 
 //callback function for the initial pull of 25 tile assets
 var initPullCallback = function(db,req,res,docs,initCoords){
-	//initialize response object
-	var responseObject = {};
-	console.log("init coords");
-	console.log(initCoords);
-	//outer loop iterates over required response fields returned and matches that have been edited and are owned
-	for (tile in initPullPairs){
-		console.log("tile");
-		console.log(tile);
-		console.log("init coords");
-		console.log(initPullPairs);
-		//inner loop iterates over returned matches that have been edited and are owned
-		for (doc in docs){
-			//if there are custom art assets at a given tile, add that document to the response body
-			if ((docs[doc]['xcoord'] - initCoords.x == initPullPairs[tile]['x']) &&
-				 docs[doc]['ycoord'] - initCoords.y == initPullPairs[tile]['y'])
-			{
-				responseObject[tile] = docs[doc];
-				console.log("match found");
-			}
-		}
-	}
 	//send response
 	res.setHeader('Content-Type','application/json');
 	res.status(200);
 	console.log("res status:");
 	console.log(JSON.stringify(res._headers))
-	res.status(200).send(JSON.stringify(responseObject));
+	res.status(200).send(JSON.stringify(docs));
 }
 
 /*this pulls a block of 25 tiles surrounding the current tile. Used for origin pull
@@ -339,8 +318,8 @@ app.post('/initpull',function(req,res){
 	for (key in initPullPairs){
 		var tempCoords = {};
 		//apply adjustment factor for every tile in the 25 tile buffer, then add to query
-		tempCoords['xcoord'] = initCoords.x + initPullPairs[key]['x'];
-		tempCoords['ycoord'] = initCoords.y + initPullPairs[key]['y'];
+		tempCoords['xcoord'] = Number.parseInt(initCoords.x) + initPullPairs[key]['x'];
+		tempCoords['ycoord'] = Number.parseInt(initCoords.y) + initPullPairs[key]['y'];
 		variableArray.push(tempCoords);
 	}
 	console.log(util.inspect(variableArray));
@@ -379,20 +358,6 @@ var pullHelper = function(req,res,setname,initCoords){
 	var query = {};
 	var variableArray = new Array();
 	for (var i = 0 ; i < 5 ; i += 1){
-		console.log("i");
-		console.log(i);
-		console.log("x");
-		console.log(pullSets[setname][i]['x']);
-		console.log("y");
-		console.log(pullSets[setname][i]['y']);
-		console.log("initCoords");
-		console.log(util.inspect(initCoords));
-		console.log("initX");
-		console.log(initCoords.x);
-		console.log("initY");
-		console.log(initCoords.y);
-		console.log(Number.parseInt(initCoords.x) + pullSets[setname][i]['x']);
-		console.log(Number.parseInt(initCoords.y) + pullSets[setname][i]['y']);
 		var tempCoords = {};
 		tempCoords['xcoord'] = Number.parseInt(initCoords.x) + pullSets[setname][i]['x'];
 		tempCoords['ycoord'] = Number.parseInt(initCoords.y) + pullSets[setname][i]['y'];

@@ -31,6 +31,33 @@ var spriteWidth = 10;
 var spriteHeight = 50;
 var defaultTextColor = '#373854';
 var panTime = 500; // ms
+//MARK ADDED DATA STRUCTURE THAT OUTLINES THE ENVIRONMENT TILES LOADED
+const initPullPairs = { "-2,-2":{"x":-2,"y":-2},
+						"-2,-1":{"x":-2,"y":-1},
+						"-2,0":{"x":-2,"y":0},
+						"-2,1":{"x":-2,"y":1},
+						"-2,2":{"x":-2,"y":2},
+						"-1,-2":{"x":-1,"y":-2},
+						"-1,-1":{"x":-1,"y":-1},
+						"-1,0":{"x":-1,"y":0},
+						"-1,1":{"x":-1,"y":1},
+						"-1,2":{"x":-1,"y":2},
+						"0,-2":{"x":0,"y":-2},
+						"0,-1":{"x":0,"y":-1},
+						"0,0":{"x":0,"y":0}, //CENTER TILE, ALL OTHERS RELATIVE TO THIS
+						"0,1":{"x":0,"y":1},
+						"0,2":{"x":0,"y":2},
+						"1,-2":{"x":1,"y":-2},
+						"1,-1":{"x":1,"y":-1},
+						"1,0":{"x":1,"y":0},
+						"1,1":{"x":1,"y":1},
+						"1,2":{"x":1,"y":2},
+						"2,-2":{"x":2,"y":-2},
+						"2,-1":{"x":2,"y":-1},
+						"2,0":{"x":2,"y":0},
+						"2,1":{"x":2,"y":1},
+						"2,2":{"x":2,"y":2},
+					};
 
 
 Game =
@@ -333,6 +360,8 @@ Game =
 			// end Toni's code
 		});
 
+		
+
 		/*start Mark's code, helper functions to fetch rows of 5 assets:
 			"top pull" : {{-2,-3},{-1,-3},{0,-3},{1,-3},{2,-3}}, URL: /pulltop
 			"bottom pull" : {{-2,3},{-1,3},{0,3},{1,3},{2,3}},   URL: /pullbottom
@@ -369,16 +398,37 @@ Game =
 			console.log("response:");
 			var body = JSON.parse(request.responseText);
 			console.log(body);
+			//render new assets in respective tiles
 		}
 
 		function dynamicError(request){
-		console.log("ERROR");
-		console.log("REQUEST");
-		console.log(request);
-		console.log("REQUEST STATUS");
-		console.log(request.status);
-		console.log(request.getAllResponseHeaders());
-		console.error(request.statusText);
+			console.log("ERROR");
+			console.log("REQUEST");
+			console.log(request);
+			console.log("REQUEST STATUS");
+			console.log(request.status);
+			console.log(request.getAllResponseHeaders());
+			console.error(request.statusText);
+		}
+
+		function initRequest(){
+			//update player tile (if teleport, this should be called post teleport coords)
+			var playerTileX = Math.floor(player.x/tileWidth);
+			var playerTileY= Math.floor(player.y/tileHeight);
+			var body = {};
+			body.x = playerTileX;
+			body.y = playerTileY;
+			console.log("Init request center tile:");
+			console.log(body);
+			dynamicPostRequest(url,body,initRender,dynamicError);
+		}
+
+		function initRender(){
+			//parse the response body and render it
+			console.log("response:");
+			var body = JSON.parse(request.responseText);
+			console.log(body);
+			//render new assets in respective tiles
 		}
 
 		// Start game on home screen
