@@ -407,15 +407,19 @@ Game =
 				//generate a URL for this svg grouping
 				var blobSvg = new Blob([myGroupString],{type:"image/svg+xml;charset=utf-8"}),
 				domURL = self.URL || self.webkitURL || self,
-				url = domURL.createObjectURL(blobSvg);
-				console.log("asset url");
-				console.log(url);
-				//adjust coordinates
-				var tempX = asset['xcoord'] * tileWidth;
-				var tempY = asset['ycoord'] * tileHeight;
-				Crafty.e('Background, 2D, DOM, Image')
+				url = domURL.createObjectURL(blobSvg),
+				img = new Image;
+				img.onload = function(){
+					console.log("asset url");
+					console.log(url);
+					//adjust coordinates
+					var tempX = asset['xcoord'] * tileWidth;
+					var tempY = asset['ycoord'] * tileHeight;
+					Crafty.e('Background, 2D, DOM, Image')
 					.attr({x: tempX, y : tempY, w: tileWidth, h: tileHeight, tileX: asset['xcoord'], tileY : asset['ycoord']})
 					.image(url);
+				};
+				img.src = url;
 			}
 		}
 
