@@ -405,7 +405,7 @@ Game =
 				//SVG tags added so that it can be a standalone, valid XML file for URL
 				var myGroupString = svgPrefix + asset['svg'] + svgPostfix;
 				//generate a URL for this svg grouping
-				var blobSvg = new Blob([myGroupStr],{type:"image/svg+xml;charset=utf-8"}),
+				var blobSvg = new Blob([myGroupString],{type:"image/svg+xml;charset=utf-8"}),
 				domURL = self.URL || self.webkitURL || self,
 				url = domURL.createObjectURL(blobSvg);
 				console.log("asset url");
