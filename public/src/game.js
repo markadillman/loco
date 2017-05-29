@@ -427,7 +427,7 @@ Game =
 			dynamicPostRequest('/initpull',body,initAssetRender,dynamicError);
 		}
 
-		function initAssetRender(){
+		function initAssetRender(request){
 			//parse the response body and render it
 			console.log("response:");
 			var body = JSON.parse(request.responseText);
