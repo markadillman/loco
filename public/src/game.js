@@ -404,6 +404,8 @@ Game =
 			for (asset in assets){
 				//SVG tags added so that it can be a standalone, valid XML file for URL
 				var myGroupString = svgPrefix + asset['svg'] + svgPostfix;
+				console.log("svg string in text");
+				console.log(myGroupString);
 				//generate a URL for this svg grouping
 				var blobSvg = new Blob([myGroupString],{type:"image/svg+xml;charset=utf-8"}),
 				domURL = self.URL || self.webkitURL || self,
@@ -419,6 +421,8 @@ Game =
 					.attr({x: tempX, y : tempY, w: tileWidth, h: tileHeight, tileX: asset['xcoord'], tileY : asset['ycoord']})
 					.image(url);
 				};
+				console.log("blob svg");
+				console.log(blobSvg);
 				img.src = url;
 			}
 		}
