@@ -59,6 +59,8 @@ const initPullPairs = { "-2,-2":{"x":-2,"y":-2},
 						"2,2":{"x":2,"y":2},
 					};
 
+var svgPrefix = "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">";
+var svgPostfix = "</svg>";
 
 Game =
 {
@@ -397,12 +399,33 @@ Game =
 			request.send(JSON.stringify(payload));
 		}
 
+		//this will render assets formatted as a returned query from the server
+		function assetRender(assets){
+			for (asset in assets){
+				//SVG tags added so that it can be a standalone, valid XML file for URL
+				var myGroupString = svgPrefix + asset['svg'] + svgPostfix;
+				//generate a URL for this svg grouping
+				var blobSvg = new Blob([myGroupStr],{type:"image/svg+xml;charset=utf-8"}),
+				domURL = self.URL || self.webkitURL || self,
+				url = domURL.createObjectURL(blobSvg);
+				console.log("asset url");
+				console.log(url);
+				//adjust coordinates
+				var tempX = asset['xcoord'] * tileWidth;
+				var tempY = asset['ycoord'] * tileHeight;
+				Crafty.e('Background, 2D, DOM, Image')
+					.attr({x: tempX, y : tempY, w: tileWidth, h: tileHeight, tileX: asset['xcoord'], tileY : asset['ycoord']})
+					.image(url);
+			}
+		}
+
 		//request responsetext will be in the format of assets
 		function dynamicPostOnLoad(request){
 			console.log("response:");
 			var body = JSON.parse(request.responseText);
 			console.log(body);
 			//render new assets in respective tiles
+			assetRender(body);
 		}
 
 		function dynamicError(request){
@@ -433,6 +456,7 @@ Game =
 			var body = JSON.parse(request.responseText);
 			console.log(body);
 			//render new assets in respective tiles
+			assetRender(body);
 		}
 
 		// Start game on home screen

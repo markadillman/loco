@@ -339,8 +339,6 @@ app.post('/initpull',function(req,res){
 	return;
 });
 
-
-
 //callback function that populates the adjusted coordinates
 var dynamicPullCallback = function(db,req,res,docs,initCoords,setname){
 	console.log("init coords");
