@@ -299,7 +299,11 @@ var initPullCallback = function(db,req,res,docs,initCoords){
 	res.setHeader('Content-Type','application/json');
 	res.status(200);
 	console.log("res status:");
-	console.log(JSON.stringify(res._headers))
+	console.log(JSON.stringify(res._headers));
+	console.log("docs:");
+	console.log(util.inspect(docs));
+	console.log("response body:");
+	console.log(JSON.stringify(docs));
 	res.status(200).send(JSON.stringify(docs));
 }
 
